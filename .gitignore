@@ -1,0 +1,7 @@
+private*
+*.swp
+*.py[cod]
+*.pyc
+
+# Scrapy stuff:
+.scrapy
