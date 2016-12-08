@@ -71,11 +71,7 @@ class OnePointThreeAcres(scrapy.Spider):
                 self.set_.add(hash_)
                 self.pb.push_note("[%s]%s"%(tag,title), "%s %s %s" % (url, time_publish, time_lastrsp) )
                 self.dict_ctr[response.request.url] += 1
-<<<<<<< HEAD
                 if self.dict_ctr[response.request.url] == 2:
-=======
-                if self.dict_ctr[response.request.url] == 1:
->>>>>>> b2d53a80f7cb66e9ea0f13da68a74e7b2ced3bbb
                     break
                 #print title+url+time_publish+time_lastrsp
 
