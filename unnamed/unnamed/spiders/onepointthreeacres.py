@@ -66,7 +66,8 @@ class OnePointThreeAcres(scrapy.Spider):
             except IndexError:
                 tag = ""
 
-            hash_ = hash(title+url+time_publish+time_lastrsp)
+            #hash_ = hash(title+url+time_publish+time_lastrsp)
+            hash_ = hash(title+url+time_publish)
             if hash_ not in self.set_:
                 self.set_.add(hash_)
                 self.pb.push_note("[%s]%s"%(tag,title), "%s %s %s" % (url, time_publish, time_lastrsp) )
