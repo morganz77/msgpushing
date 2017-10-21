@@ -6,6 +6,7 @@ import pickle
 import time
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
+from unnamed.items import UnnamedItem
 
 class OnePointThreeAcres(scrapy.Spider):
     name = "1p3a"
@@ -47,6 +48,7 @@ class OnePointThreeAcres(scrapy.Spider):
         threads = filter(filter_func, tbody)
         #print threads
 
+        msg_to_send = ""
         for thread in threads:
             title = thread.css("tr > th > a.s.xst::text").extract()[0]
             url = thread.css("tr > th > a.s.xst").xpath("@href").extract()[0]
@@ -65,14 +67,15 @@ class OnePointThreeAcres(scrapy.Spider):
             except IndexError:
                 tag = ""
 
-            #hash_ = hash(title+url+time_publish+time_lastrsp)
             hash_ = hash(title+url+time_publish)
             if hash_ not in self.set_:
                 self.set_.add(hash_)
-                self.pb.push_note("[%s]%s"%(tag,title), "%s %s %s" % (url, time_publish, time_lastrsp) )
+                msg_to_send += ("[%s]%s\n"%(tag,title) + "%s %s %s\n\n" % (url, time_publish, time_lastrsp)) 
                 self.dict_ctr[response.request.url] += 1
                 if self.dict_ctr[response.request.url] == 2:
                     break
-                #print title+url+time_publish+time_lastrsp
+        item = UnnamedItem()
+        item["name"] =  OnePointThreeAcres.name
+        item["res"] =  msg_to_send
+        return item
 
-        #self.log('Saved file %s' % filename)
