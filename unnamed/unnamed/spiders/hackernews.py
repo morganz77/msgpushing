@@ -6,11 +6,12 @@ import pickle
 import time
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
+from unnamed.items import UnnamedItem
 
 CACHEPATH = "hashes_hn"
 NUMPERURL = 10
 MINSCORE = 80
-class OnePointThreeAcres(scrapy.Spider):
+class HackerNews(scrapy.Spider):
     name = "hn"
 
     def __init__(self):
@@ -29,7 +30,6 @@ class OnePointThreeAcres(scrapy.Spider):
         self.dict_ctr = {}
         for url in urls:
             self.dict_ctr[url] = 0
-        self.pb = Pushbullet(API_KEY)
 
         try:
             f = open(CACHEPATH, "r")
@@ -70,6 +70,7 @@ class OnePointThreeAcres(scrapy.Spider):
         threads = filter(filter_func, trs)
         #print threads
 
+        msg_to_send = ""
         for thread in threads:
             title = thread.css("td:nth-child(3) > a::text").extract()[0]
             url = thread.css("td:nth-child(3) > a").xpath("@href").extract()[0]
@@ -80,10 +81,15 @@ class OnePointThreeAcres(scrapy.Spider):
             hash_ = hash(title+url+id_+score)
             if int(score.strip().split()[0]) >= MINSCORE and hash_ not in self.set_:
                 self.set_.add(hash_)
-                #print "%s %s"%(title, id_), "%s %s %s" % (url, score, age) 
-                self.pb.push_note("%s %s"%(title, id_), "%s %s %s" % (url, score, age))
+
+                msg_to_send += ("%s %s\n"%(title, id_) + "%s %s %s\n\n" % (url, score, age)) 
                 self.dict_ctr[response.request.url] += 1
                 if self.dict_ctr[response.request.url] == NUMPERURL:
                     break
+        item = UnnamedItem()
+        item["name"] =  HackerNews.name
+        item["res"] =  msg_to_send
+        return item
+
 
         #self.log('Saved file %s' % filename)

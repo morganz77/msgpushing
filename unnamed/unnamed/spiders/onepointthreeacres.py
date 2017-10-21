@@ -30,7 +30,6 @@ class OnePointThreeAcres(scrapy.Spider):
         self.dict_ctr = {}
         for url in urls:
             self.dict_ctr[url] = 0
-        self.pb = Pushbullet(API_KEY)
 
         try:
             f = open("hashes", "r")
