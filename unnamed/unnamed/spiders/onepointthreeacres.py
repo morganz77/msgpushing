@@ -21,16 +21,23 @@ class OnePointThreeAcres(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-                 'http://www.1point3acres.com/bbs/forum-70-1.html',
-                 'http://www.1point3acres.com/bbs/forum-29-1.html',
-                 'http://www.1point3acres.com/bbs/forum-47-1.html',
-                 'http://www.1point3acres.com/bbs/forum-99-1.html',
-                 'http://www.1point3acres.com/bbs/forum-224-1.html'
+                 'https://www.1point3acres.com/bbs/forum-28-1.html',
+                 'https://www.1point3acres.com/bbs/forum-29-1.html',
+                 'https://www.1point3acres.com/bbs/forum-41-1.html',
+                 'https://www.1point3acres.com/bbs/forum-47-1.html',
+                 'https://www.1point3acres.com/bbs/forum-99-1.html',
+                 'https://www.1point3acres.com/bbs/forum-189-1.html',
+                 'https://www.1point3acres.com/bbs/forum-78-1.html',
+                 #'https://www.1point3acres.com/bbs/forum-80-1.html',
+                 #'https://www.1point3acres.com/bbs/forum-142-1.html',
+                 #'https://www.1point3acres.com/bbs/forum-70-1.html',
+                 #'https://www.1point3acres.com/bbs/forum-224-1.html'
                 ]
 
         self.dict_ctr = {}
         for url in urls:
             self.dict_ctr[url] = 0
+
 
         try:
             f = open("hashes", "r")
@@ -43,15 +50,15 @@ class OnePointThreeAcres(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        tbody = response.css("tbody")
+        table = response.css("#threadlisttableid")
+        tbody = table[0].select("tbody")
         filter_func = lambda x:x.xpath("@id").extract()[0].startswith("normalthread")
         threads = filter(filter_func, tbody)
-        #print threads
 
         msg_to_send = ""
         for thread in threads:
             title = thread.css("tr > th > a.s.xst::text").extract()[0]
-            url = thread.css("tr > th > a.s.xst").xpath("@href").extract()[0]
+            url ="https://www.1point3acres.com/bbs/" + thread.css("tr > th > a.s.xst").xpath("@href").extract()[0]
             try:
                 time_publish = thread.css("tr > td:nth-child(3) > em > span::text").extract()[0]
             except IndexError:
