@@ -4,7 +4,7 @@ from private import API_KEY
 from pushbullet import Pushbullet
 import pickle
 import time
-from scrapy.xlib.pydispatch import dispatcher
+from pydispatch import dispatcher
 from scrapy import signals
 from unnamed.items import UnnamedItem
 
