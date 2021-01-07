@@ -17,7 +17,7 @@ functools32==3.2.3.post2  # via parsel
 idna==2.8                 # via requests
 incremental==17.5.0       # via twisted
 ipaddress==1.0.23         # via cryptography, service-identity
-lxml==4.4.2               # via parsel, scrapy
+lxml==4.6.2               # via parsel, scrapy
 parsel==1.5.2             # via scrapy
 pushbullet.py==0.10.0
 pyasn1-modules==0.2.7     # via service-identity
